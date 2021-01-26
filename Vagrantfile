@@ -3,7 +3,6 @@ Vagrant.configure(2) do |config|
 		devbox.vm.box = "ubuntu/bionic64"
     		#devbox.vm.network "private_network", ip: "192.168.199.9"
     		#devbox.vm.hostname = "devops-box"
-			devbox.vm.hostname = "ubuntu"
     		devbox.vm.provider "virtualbox" do |v|
 			  v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
 	          v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]

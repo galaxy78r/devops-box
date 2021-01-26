@@ -9,11 +9,19 @@ fi
 
 TERRAFORM_VERSION="0.12.18"
 PACKER_VERSION="1.2.4"
+
+#copy vagrant ssh key to ubuntu 
+#cp -pr /home/vagrant/.ssh /home/ubuntu/
+#chown -R ubuntu:ubuntu /home/ubuntu
+#echo "%ubuntu ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/ubuntu
+
 # create new ssh key
 [[ ! -f /home/ubuntu/.ssh/mykey ]] \
 && mkdir -p /home/ubuntu/.ssh \
 && ssh-keygen -f /home/ubuntu/.ssh/mykey -N '' \
 && chown -R ubuntu:ubuntu /home/ubuntu/.ssh
+
+
 
 # install packages
 if [ ${REDHAT_BASED} ] ; then
@@ -29,9 +37,13 @@ usermod -G docker ubuntu
 pip3 install -U awscli
 pip3 install -U awsebcli
 
+
 #terraform
 T_VERSION=$(/usr/local/bin/terraform -v | head -1 | cut -d ' ' -f 2 | tail -c +2)
 T_RETVAL=${PIPESTATUS[0]}
+
+#ibmcloud
+curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
 
 [[ $T_VERSION != $TERRAFORM_VERSION ]] || [[ $T_RETVAL != 0 ]] \
 && wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
