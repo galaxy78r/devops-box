@@ -44,6 +44,9 @@ T_RETVAL=${PIPESTATUS[0]}
 
 #ibmcloud
 curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
+ibmcloud plugin install container-service
+ibmcloud plugin install container-registry
+ibmcloud plugin install observe-service
 
 [[ $T_VERSION != $TERRAFORM_VERSION ]] || [[ $T_RETVAL != 0 ]] \
 && wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
