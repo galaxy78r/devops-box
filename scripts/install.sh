@@ -42,12 +42,6 @@ pip3 install -U awsebcli
 T_VERSION=$(/usr/local/bin/terraform -v | head -1 | cut -d ' ' -f 2 | tail -c +2)
 T_RETVAL=${PIPESTATUS[0]}
 
-#ibmcloud
-curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
-ibmcloud plugin install container-service
-ibmcloud plugin install container-registry
-ibmcloud plugin install observe-service
-
 [[ $T_VERSION != $TERRAFORM_VERSION ]] || [[ $T_RETVAL != 0 ]] \
 && wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
 && unzip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/local/bin \
@@ -61,6 +55,24 @@ P_RETVAL=$?
 && wget -q https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip \
 && unzip -o packer_${PACKER_VERSION}_linux_amd64.zip -d /usr/local/bin \
 && rm packer_${PACKER_VERSION}_linux_amd64.zip
+
+#ibmcloud
+curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
+ibmcloud plugin install container-service
+ibmcloud plugin install container-registry
+ibmcloud plugin install observe-service
+
+#Install kubectl
+curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+kubectl version --client
+
+#Install KOPS
+curl -Lo kops https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
+chmod +x kops
+sudo mv kops /usr/local/bin/kops
+
 
 # clean up
 if [ ! ${REDHAT_BASED} ] ; then
